@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#123b2c">
+<title>MyHisab — Personal Finance</title>
+<style>
+:root{--bg:#f4f7f5;--card:#fff;--ink:#18251f;--muted:#69776f;--green:#176b4d;--green2:#e4f4eb;--red:#c43d4b;--amber:#9b6a0b;--line:#e3eae5;--shadow:0 8px 28px #123b2c0b}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.45 system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
+button,input,select,textarea{font:inherit}button{cursor:pointer;border:0;border-radius:11px;padding:10px 14px;font-weight:650;background:var(--green);color:white}button.secondary{background:#edf2ef;color:#20352a}button.danger{background:#fff0f0;color:#a52432}button.small{padding:6px 9px;font-size:12px}
+header{background:linear-gradient(120deg,#103b2b,#1b7352);color:white;padding:24px max(18px,calc((100% - 1180px)/2)) 26px}
+.top{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}.brand{font-size:25px;font-weight:850;letter-spacing:-.5px}.brand span{color:#9de1ba}.sub{opacity:.8;font-size:13px}.top-actions{display:flex;gap:8px;flex-wrap:wrap}.top-actions button{background:#ffffff20;border:1px solid #ffffff35}
+main{max-width:1180px;margin:0 auto;padding:22px 18px 50px}.grid{display:grid;gap:14px}.stats{grid-template-columns:repeat(4,minmax(0,1fr));margin-top:-1px}.card{background:var(--card);border:1px solid var(--line);border-radius:17px;padding:17px;box-shadow:var(--shadow);min-width:0}.stat-label{font-size:13px;color:var(--muted)}.stat-value{font-size:clamp(21px,3vw,30px);font-weight:800;margin:7px 0 2px;overflow-wrap:anywhere}.positive{color:var(--green)}.negative{color:var(--red)}.muted{color:var(--muted)}.section-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:26px 0 12px;flex-wrap:wrap}.section-head h2{font-size:19px;margin:0;letter-spacing:-.3px}.layout{grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);align-items:start}.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.field{display:flex;flex-direction:column;gap:5px}.field.full{grid-column:1/-1}.field label{font-size:12px;color:var(--muted);font-weight:700}.field input,.field select,.field textarea{width:100%;padding:11px 12px;border:1px solid #dbe5de;border-radius:10px;background:#fff;color:var(--ink);outline:none}.field input:focus,.field select:focus,.field textarea:focus{border-color:#3e9c72;box-shadow:0 0 0 3px #3e9c7218}.radio-row{display:flex;gap:8px}.radio-row label{flex:1;display:flex;align-items:center;gap:7px;padding:10px;border:1px solid var(--line);border-radius:10px;color:var(--ink);font-size:13px}.radio-row input{width:auto}.form-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}.list{display:flex;flex-direction:column;gap:0}.row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px;padding:13px 0;border-bottom:1px solid var(--line);align-items:center}.row:last-child{border-bottom:0}.row-title{font-weight:700;overflow-wrap:anywhere}.row-meta{font-size:12px;color:var(--muted);margin-top:3px}.row-right{text-align:right;white-space:nowrap}.amount{font-weight:800}.pill{display:inline-block;font-size:11px;font-weight:750;padding:3px 7px;border-radius:30px;background:var(--green2);color:var(--green);margin-top:5px}.pill.exp{background:#fff0f0;color:var(--red)}.pill.transfer{background:#edf1ff;color:#465aa6}.empty{text-align:center;padding:28px 10px;color:var(--muted)}.filter-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px}.filter-row input,.filter-row select{border:1px solid var(--line);border-radius:9px;background:white;padding:9px;min-width:0}.account-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.account{padding:14px;border-radius:13px;background:#f8fbf9;border:1px solid var(--line)}.account-name{font-weight:750}.account-bal{font-size:20px;font-weight:800;margin-top:8px}.bars{display:flex;flex-direction:column;gap:12px}.bar-label{display:flex;justify-content:space-between;gap:10px;font-size:13px;margin-bottom:5px}.bar-bg{height:9px;border-radius:99px;background:#edf2ee;overflow:hidden}.bar-fill{height:100%;background:#2b9667;border-radius:99px}.bar-fill.red{background:#d76b74}.foot{text-align:center;color:var(--muted);font-size:12px;padding:20px}.notice{font-size:12px;color:var(--muted);line-height:1.5}.toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:#173c2d;color:#fff;padding:12px 18px;border-radius:12px;box-shadow:var(--shadow);z-index:5;display:none;max-width:90vw}.hidden{display:none!important}
+@media(max-width:800px){.stats{grid-template-columns:repeat(2,minmax(0,1fr))}.layout{grid-template-columns:1fr}.account-grid{grid-template-columns:1fr 1fr}header{padding-top:18px}}
+@media(max-width:430px){main{padding:16px 12px 35px}.card{padding:14px}.form-grid{grid-template-columns:1fr}.field.full{grid-column:auto}.account-grid{grid-template-columns:1fr 1fr}.stat-value{font-size:22px}.brand{font-size:23px}}
+</style>
+</head>
+<body>
+<header><div class="top"><div><div class="brand">My<span>Hisab</span></div><div class="sub">Your money, clearly managed.</div></div><div class="top-actions"><button id="exportBtn">Export backup</button><button id="importBtn">Import backup</button><input id="importFile" type="file" accept=".json,application/json" class="hidden"></div></div></header>
+<main>
+<div class="section-head"><h2>Overview</h2><div class="muted" id="monthLabel"></div></div>
+<div class="grid stats">
+ <div class="card"><div class="stat-label">Total balance</div><div class="stat-value" id="totalBalance">৳0</div><div class="muted" style="font-size:12px">Across all accounts</div></div>
+ <div class="card"><div class="stat-label">Income this month</div><div class="stat-value positive" id="monthIncome">৳0</div><div class="muted" style="font-size:12px">Money received</div></div>
+ <div class="card"><div class="stat-label">Expenses this month</div><div class="stat-value negative" id="monthExpense">৳0</div><div class="muted" style="font-size:12px">Money spent</div></div>
+ <div class="card"><div class="stat-label">Net this month</div><div class="stat-value" id="monthNet">৳0</div><div class="muted" style="font-size:12px">Income minus expenses</div></div>
+</div>
+<div class="section-head"><h2>Accounts</h2><button class="secondary" id="manageAccountsBtn">Manage accounts</button></div>
+<div class="grid account-grid" id="accountsView"></div>
+<div class="grid layout">
+ <section>
+  <div class="section-head"><h2 id="formTitle">Add transaction</h2></div>
+  <div class="card">
+   <form id="txForm">
+    <div class="field full"><label>Transaction type</label><div class="radio-row">
+      <label><input type="radio" name="type" value="expense" checked> Expense</label>
+      <label><input type="radio" name="type" value="income"> Income</label>
+      <label><input type="radio" name="type" value="transfer"> Transfer</label>
+    </div></div>
+    <div class="form-grid" style="margin-top:12px">
+     <div class="field"><label for="amount">Amount (৳)</label><input id="amount" type="number" min="0.01" step="0.01" placeholder="e.g. 150" required></div>
+     <div class="field"><label for="date">Date</label><input id="date" type="date" required></div>
+     <div class="field" id="accountField"><label for="account">Account</label><select id="account" required></select></div>
+     <div class="field hidden" id="toAccountField"><label for="toAccount">Transfer to</label><select id="toAccount"></select></div>
+     <div class="field" id="categoryField"><label for="category">Category</label><select id="category"></select></div>
+     <div class="field"><label for="person">Person / Payee (optional)</label><input id="person" placeholder="e.g. Shop, friend"></div>
+     <div class="field full"><label for="note">Note (optional)</label><input id="note" placeholder="What was this for?"></div>
+    </div>
+    <div class="form-actions"><button type="submit" id="saveTxBtn">Save transaction</button><button type="button" class="secondary hidden" id="cancelEdit">Cancel edit</button></div>
+   </form>
+  </div>
+  <div class="section-head"><h2>Monthly spending</h2></div>
+  <div class="card"><div id="spendingBars" class="bars"></div></div>
+ </section>
+ <section>
+  <div class="section-head"><h2>Transactions</h2><button class="secondary" id="csvBtn">Export CSV</button></div>
+  <div class="card">
+   <div class="filter-row"><input id="searchTx" placeholder="Search transactions…" aria-label="Search transactions"><select id="monthFilter" aria-label="Filter month"><option value="all">All months</option></select></div>
+   <div class="list" id="txList"></div>
+  </div>
+ </section>
+</div>
+<div class="grid layout" style="margin-top:4px">
+ <section>
+  <div class="section-head"><h2>Loans & money lent</h2><button id="addDebtBtn">Add record</button></div>
+  <div class="card">
+   <form id="debtForm" class="hidden">
+    <div class="form-grid">
+     <div class="field"><label for="debtType">Record type</label><select id="debtType"><option value="lent">I lent money</option><option value="borrowed">I borrowed money</option></select></div>
+     <div class="field"><label for="debtPerson">Person</label><input id="debtPerson" required placeholder="Person's name"></div>
+     <div class="field"><label for="debtAmount">Total amount (৳)</label><input id="debtAmount" type="number" min="0.01" step="0.01" required></div>
+     <div class="field"><label for="debtDate">Date</label><input id="debtDate" type="date" required></div>
+     <div class="field"><label for="debtNote">Note (optional)</label><input id="debtNote" placeholder="Reason / details"></div>
+    </div><div class="form-actions"><button type="submit">Save record</button><button type="button" class="secondary" id="cancelDebt">Cancel</button></div>
+   </form>
+   <div class="list" id="debtList"></div>
+  </div>
+ </section>
+ <section>
+  <div class="section-head"><h2>Budget</h2><button id="budgetBtn">Set budget</button></div>
+  <div class="card">
+   <div id="budgetView"></div>
+   <form id="budgetForm" class="hidden" style="margin-top:12px">
+    <div class="field"><label for="budgetAmount">Monthly spending budget (৳)</label><input id="budgetAmount" type="number" min="0" step="0.01" required placeholder="e.g. 10000"></div>
+    <div class="form-actions"><button type="submit">Save budget</button><button type="button" class="secondary" id="cancelBudget">Cancel</button></div>
+   </form>
+  </div>
+ </section>
+</div>
+<div class="section-head"><h2>Data & privacy</h2></div>
+<div class="card"><div class="notice">Your entries are saved in this browser on this device. This first version works offline after the page has been opened, but it does not automatically sync between your phone and computer. Use <b>Export backup</b> regularly and import the backup on another device. Clearing browser data can erase your saved records. Never enter banking passwords, PINs, or OTPs here.</div><div class="form-actions"><button class="secondary" id="resetBtn">Clear all app data</button></div></div>
+<div class="foot">MyHisab • Personal finance, made simple</div>
+</main>
+<div class="toast" id="toast"></div>
+<script>
+const KEY='myhisab_v1_data';
+const defaultAccounts=[{id:'cash',name:'Cash',balance:0},{id:'bank',name:'Bank',balance:0},{id:'bkash',name:'bKash',balance:0},{id:'nagad',name:'Nagad',balance:0}];
+const categories={expense:['Food','Transport','Shopping','Bills','Education','Health','Mobile & Internet','Entertainment','Family','Rent','Personal care','Other'],income:['Salary','Freelancing','Business','Family support','Gift','Other'],transfer:['Transfer']};
+let data=loadData(),editingId=null;
+function loadData(){try{const d=JSON.parse(localStorage.getItem(KEY));if(d&&Array.isArray(d.transactions))return {...{accounts:defaultAccounts,transactions:[],debts:[],budget:0},...d}}catch(e){}return {accounts:structuredClone(defaultAccounts),transactions:[],debts:[],budget:0}}
+function save(){localStorage.setItem(KEY,JSON.stringify(data));render()}
+function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,7)}
+function localDate(d=new Date()){return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`}
+function money(n){return '৳'+Number(n||0).toLocaleString('en-BD',{maximumFractionDigits:2})}
+function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function monthOf(s){return (s||'').slice(0,7)}
+function currentMonth(){return localDate().slice(0,7)}
+function showToast(s){const t=document.getElementById('toast');t.textContent=s;t.style.display='block';setTimeout(()=>t.style.display='none',2600)}
+function accountName(id){return data.accounts.find(a=>a.id===id)?.name||'Deleted account'}
+function getAccountBalance(id){let b=0;data.transactions.forEach(t=>{if(t.type==='income'&&t.accountId===id)b+=t.amount;if(t.type==='expense'&&t.accountId===id)b-=t.amount;if(t.type==='transfer'){if(t.accountId===id)b-=t.amount;if(t.toAccountId===id)b+=t.amount}});return b}
+function populateSelects(){const acct=document.getElementById('account'),to=document.getElementById('toAccount');const opts=data.accounts.map(a=>`<option value="${esc(a.id)}">${esc(a.name)}</option>`).join('');acct.innerHTML=opts;to.innerHTML=opts;updateCategories()}
+function updateCategories(){const type=document.querySelector('input[name="type"]:checked').value;document.getElementById('category').innerHTML=categories[type].map(c=>`<option>${esc(c)}</option>`).join('');document.getElementById('categoryField').classList.toggle('hidden',type==='transfer');document.getElementById('toAccountField').classList.toggle('hidden',type!=='transfer');document.getElementById('person').placeholder=type==='income'?'Received from (optional)':type==='expense'?'Shop / payee (optional)':'Transfer note (optional)'}
+function render(){populateSelects();const m=currentMonth();document.getElementById('monthLabel').textContent=new Date().toLocaleDateString('en-US',{month:'long',year:'numeric'});const inc=data.transactions.filter(t=>t.type==='income'&&monthOf(t.date)===m).reduce((s,t)=>s+t.amount,0);const exp=data.transactions.filter(t=>t.type==='expense'&&monthOf(t.date)===m).reduce((s,t)=>s+t.amount,0);const total=data.accounts.reduce((s,a)=>s+getAccountBalance(a.id),0);
+document.getElementById('totalBalance').textContent=money(total);document.getElementById('monthIncome').textContent=money(inc);document.getElementById('monthExpense').textContent=money(exp);const net=document.getElementById('monthNet');net.textContent=money(inc-exp);net.className='stat-value '+(inc-exp<0?'negative':'positive');
+document.getElementById('accountsView').innerHTML=data.accounts.map(a=>`<div class="account"><div class="account-name">${esc(a.name)}</div><div class="account-bal">${money(getAccountBalance(a.id))}</div><div class="muted" style="font-size:11px">Current balance</div></div>`).join('')||'<div class="card empty">Add an account to get started.</div>';
+renderTransactions();renderSpending();renderDebts();renderBudget();populateMonths()}
+function renderTransactions(){const q=document.getElementById('searchTx').value.toLowerCase(),mf=document.getElementById('monthFilter').value;const list=data.transactions.filter(t=>(mf==='all'||monthOf(t.date)===mf)&&[t.note,t.person,t.category,accountName(t.accountId),t.type].join(' ').toLowerCase().includes(q)).sort((a,b)=>(b.date||'').localeCompare(a.date||'')||b.createdAt-a.createdAt);const el=document.getElementById('txList');if(!list.length){el.innerHTML='<div class="empty">No transactions yet. Add your first transaction.</div>';return}el.innerHTML=list.map(t=>{let sign=t.type==='income'?'+':t.type==='expense'?'−':'↔';let cls=t.type==='income'?'positive':t.type==='expense'?'negative':'';let desc=t.type==='transfer'?`${accountName(t.accountId)} → ${accountName(t.toAccountId)}`:`${esc(t.category||'')} · ${esc(accountName(t.accountId))}`;return `<div class="row"><div><div class="row-title">${esc(t.note||t.person||t.category||t.type[0].toUpperCase()+t.type.slice(1))}</div><div class="row-meta">${esc(t.date)} · ${desc}${t.person&&t.note?' · '+esc(t.person):''}</div><span class="pill ${t.type==='expense'?'exp':t.type==='transfer'?'transfer':''}">${esc(t.type)}</span></div><div class="row-right"><div class="amount ${cls}">${sign} ${money(t.amount)}</div><div style="display:flex;gap:5px;justify-content:flex-end;margin-top:7px"><button class="small secondary" onclick="editTx('${t.id}')">Edit</button><button class="small danger" onclick="deleteTx('${t.id}')">Delete</button></div></div></div>`}).join('')}
+function renderSpending(){const m=currentMonth(),ex=data.transactions.filter(t=>t.type==='expense'&&monthOf(t.date)===m);const sums={};ex.forEach(t=>sums[t.category||'Other']=(sums[t.category||'Other']||0)+t.amount);const entries=Object.entries(sums).sort((a,b)=>b[1]-a[1]);const total=ex.reduce((s,t)=>s+t.amount,0);const el=document.getElementById('spendingBars');if(!entries.length){el.innerHTML='<div class="empty">Your spending breakdown will appear here.</div>';return}el.innerHTML=entries.map(([name,val])=>`<div><div class="bar-label"><span>${esc(name)}</span><b>${money(val)}</b></div><div class="bar-bg"><div class="bar-fill red" style="width:${total?val/total*100:0}%"></div></div></div>`).join('')}
+function renderDebts(){const el=document.getElementById('debtList');if(!data.debts.length){el.innerHTML='<div class="empty">No loan or lending records yet.</div>';return}el.innerHTML=data.debts.slice().sort((a,b)=>b.date.localeCompare(a.date)).map(d=>`<div class="row"><div><div class="row-title">${esc(d.person)} <span class="pill">${d.type==='lent'?'They owe you':'You owe them'}</span></div><div class="row-meta">${esc(d.date)} · ${esc(d.note||'No note')} · Repaid ${money(d.paid||0)} of ${money(d.amount)}</div><div class="row-meta"><b>Remaining: ${money(Math.max(0,d.amount-(d.paid||0)))}</b></div></div><div class="row-right"><button class="small secondary" onclick="repayDebt('${d.id}')">Add repayment</button><button class="small danger" style="margin-top:5px" onclick="deleteDebt('${d.id}')">Delete</button></div></div>`).join('')}
+function renderBudget(){const el=document.getElementById('budgetView');const exp=data.transactions.filter(t=>t.type==='expense'&&monthOf(t.date)===currentMonth()).reduce((s,t)=>s+t.amount,0);if(!data.budget){el.innerHTML='<div class="empty">Set a monthly budget to track your spending.</div>';return}const pct=Math.min(100,exp/data.budget*100);el.innerHTML=`<div class="bar-label"><span>Spent ${money(exp)} of ${money(data.budget)}</span><b>${Math.round(exp/data.budget*100)}%</b></div><div class="bar-bg"><div class="bar-fill ${pct>=100?'red':''}" style="width:${pct}%"></div></div><p class="${exp>data.budget?'negative':'muted'}" style="font-size:13px;margin-bottom:0">${exp>data.budget?'Budget exceeded by '+money(exp-data.budget):money(data.budget-exp)+' remaining this month'}</p>`}
+function populateMonths(){const sel=document.getElementById('monthFilter'),old=sel.value;const months=[...new Set(data.transactions.map(t=>monthOf(t.date)).filter(Boolean))].sort().reverse();sel.innerHTML='<option value="all">All months</option>'+months.map(m=>`<option value="${m}">${new Date(m+'-02').toLocaleDateString('en-US',{month:'long',year:'numeric'})}</option>`).join('');if(months.includes(old)||old==='all')sel.value=old}
+function resetForm(){editingId=null;document.getElementById('txForm').reset();document.getElementById('date').value=localDate();document.querySelector('input[name="type"][value="expense"]').checked=true;document.getElementById('formTitle').textContent='Add transaction';document.getElementById('saveTxBtn').textContent='Save transaction';document.getElementById('cancelEdit').classList.add('hidden');updateCategories()}
+function editTx(id){const t=data.transactions.find(x=>x.id===id);if(!t)return;editingId=id;document.querySelector(`input[name="type"][value="${t.type}"]`).checked=true;updateCategories();document.getElementById('amount').value=t.amount;document.getElementById('date').value=t.date;document.getElementById('account').value=t.accountId;document.getElementById('toAccount').value=t.toAccountId||data.accounts[1]?.id||data.accounts[0]?.id;document.getElementById('category').value=t.category||'';document.getElementById('person').value=t.person||'';document.getElementById('note').value=t.note||'';document.getElementById('formTitle').textContent='Edit transaction';document.getElementById('saveTxBtn').textContent='Update transaction';document.getElementById('cancelEdit').classList.remove('hidden');document.getElementById('amount').focus();window.scrollTo({top:document.getElementById('txForm').getBoundingClientRect().top+scrollY-20,behavior:'smooth'})}
+function deleteTx(id){if(confirm('Delete this transaction? Account balances and reports will update.')){data.transactions=data.transactions.filter(t=>t.id!==id);if(editingId===id)resetForm();save();showToast('Transaction deleted')}}
+function deleteDebt(id){if(confirm('Delete this loan record?')){data.debts=data.debts.filter(d=>d.id!==id);save()}}
+function repayDebt(id){const d=data.debts.find(x=>x.id===id);if(!d)return;const left=d.amount-(d.paid||0);const raw=prompt(`Remaining: ${money(left)}\nEnter repayment amount (৳):`);if(raw===null)return;const amt=Number(raw);if(!Number.isFinite(amt)||amt<=0||amt>left){alert('Enter an amount greater than 0 and no more than the remaining amount.');return}d.paid=(d.paid||0)+amt;save();showToast('Repayment updated')}
+document.querySelectorAll('input[name="type"]').forEach(x=>x.addEventListener('change',updateCategories));
+document.getElementById('date').value=localDate();
+document.getElementById('txForm').addEventListener('submit',e=>{e.preventDefault();const type=document.querySelector('input[name="type"]:checked').value,amount=Number(document.getElementById('amount').value),accountId=document.getElementById('account').value,toAccountId=document.getElementById('toAccount').value;if(!Number.isFinite(amount)||amount<=0){alert('Please enter an amount greater than zero.');return}if(type==='transfer'&&accountId===toAccountId){alert('Choose two different accounts for a transfer.');return}const tx={id:editingId||uid(),type,amount,date:document.getElementById('date').value,accountId,toAccountId:type==='transfer'?toAccountId:null,category:type==='transfer'?'Transfer':document.getElementById('category').value,person:document.getElementById('person').value.trim(),note:document.getElementById('note').value.trim(),createdAt:Date.now()};if(editingId){const i=data.transactions.findIndex(t=>t.id===editingId);data.transactions[i]=tx}else data.transactions.push(tx);save();resetForm();showToast(editingId?'Transaction updated':'Transaction saved')});
+document.getElementById('cancelEdit').onclick=resetForm;
+document.getElementById('searchTx').addEventListener('input',renderTransactions);document.getElementById('monthFilter').addEventListener('change',renderTransactions);
+document.getElementById('exportBtn').onclick=()=>{const blob=new Blob([JSON.stringify({...data,exportedAt:new Date().toISOString(),app:'MyHisab'},null,2)],{type:'application/json'});downloadBlob(blob,'myhisab-backup-'+localDate()+'.json');showToast('Backup exported')};
+document.getElementById('importBtn').onclick=()=>document.getElementById('importFile').click();
+document.getElementById('importFile').onchange=async e=>{const f=e.target.files[0];if(!f)return;try{const d=JSON.parse(await f.text());if(!Array.isArray(d.transactions)||!Array.isArray(d.accounts)||!Array.isArray(d.debts))throw new Error('Invalid backup');if(confirm('Import this backup and replace the current app data? Export a backup of current data first if needed.')){data={accounts:d.accounts,transactions:d.transactions,debts:d.debts,budget:Number(d.budget)||0};save();resetForm();showToast('Backup imported')}}catch(err){alert('Could not import this file. Please select a valid MyHisab backup.')}e.target.value=''};
+function downloadBlob(blob,name){const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),1000)}
+document.getElementById('csvBtn').onclick=()=>{const rows=[['Date','Type','Amount BDT','Account','Transfer To','Category','Person','Note'],...data.transactions.slice().sort((a,b)=>a.date.localeCompare(b.date)).map(t=>[t.date,t.type,t.amount,accountName(t.accountId),t.toAccountId?accountName(t.toAccountId):'',t.category||'',t.person||'',t.note||''])];const csv=rows.map(r=>r.map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(',')).join('\r\n');downloadBlob(new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8'}),'myhisab-transactions-'+localDate()+'.csv')};
+document.getElementById('addDebtBtn').onclick=()=>{document.getElementById('debtForm').classList.toggle('hidden');document.getElementById('debtDate').value=localDate()};
+document.getElementById('cancelDebt').onclick=()=>document.getElementById('debtForm').classList.add('hidden');
+document.getElementById('debtForm').addEventListener('submit',e=>{e.preventDefault();const amount=Number(document.getElementById('debtAmount').value);if(amount<=0)return;data.debts.push({id:uid(),type:document.getElementById('debtType').value,person:document.getElementById('debtPerson').value.trim(),amount,paid:0,date:document.getElementById('debtDate').value,note:document.getElementById('debtNote').value.trim()});save();e.target.reset();e.target.classList.add('hidden');showToast('Loan record saved')});
+document.getElementById('budgetBtn').onclick=()=>{document.getElementById('budgetForm').classList.toggle('hidden');document.getElementById('budgetAmount').value=data.budget||''};
+document.getElementById('cancelBudget').onclick=()=>document.getElementById('budgetForm').classList.add('hidden');
+document.getElementById('budgetForm').addEventListener('submit',e=>{e.preventDefault();data.budget=Number(document.getElementById('budgetAmount').value)||0;save();e.target.classList.add('hidden');showToast('Budget saved')});
+document.getElementById('manageAccountsBtn').onclick=()=>{const list=data.accounts.map((a,i)=>`${i+1}. ${a.name}`).join('\n');const action=prompt('Accounts:\n'+list+'\n\nType ADD to add an account, RENAME to rename one, or REMOVE to remove one.');if(!action)return;const a=action.trim().toUpperCase();if(a==='ADD'){const name=prompt('New account name:');if(name&&name.trim()&&!data.accounts.some(x=>x.name.toLowerCase()===name.trim().toLowerCase())){data.accounts.push({id:uid(),name:name.trim()});save();showToast('Account added')}}else if(a==='RENAME'){const n=Number(prompt('Enter account number to rename (1-'+data.accounts.length+'):'));if(!Number.isInteger(n)||!data.accounts[n-1])return;const name=prompt('New account name:',data.accounts[n-1].name);if(name&&name.trim()){data.accounts[n-1].name=name.trim();save()}}else if(a==='REMOVE'){const n=Number(prompt('Enter account number to remove (1-'+data.accounts.length+'):'));if(!Number.isInteger(n)||!data.accounts[n-1])return;const id=data.accounts[n-1].id;if(data.accounts.length===1){alert('Keep at least one account.');return}if(data.transactions.some(t=>t.accountId===id||t.toAccountId===id)){alert('This account has transaction history. Move or delete those transactions before removing it.');return}if(confirm('Remove '+data.accounts[n-1].name+'?')){data.accounts.splice(n-1,1);save()}}};
+document.getElementById('resetBtn').onclick=()=>{if(confirm('Permanently clear all MyHisab data in this browser? Export a backup first if you need it.')){data={accounts:structuredClone(defaultAccounts),transactions:[],debts:[],budget:0};save();resetForm();showToast('App data cleared')}};
+render();resetForm();
+</script>
+</body>
+</html>
